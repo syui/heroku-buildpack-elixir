@@ -73,12 +73,17 @@ function app_dependencies() {
   # And all git operations are performed on the respective repos
   local git_dir_value=$GIT_DIR
   unset GIT_DIR
-
   cd $build_path
+  export direc_file=".credo.exs deps docs elixir_buildpack.config .formatter.exs .gitignore .gitlab-ci.yml installation LICENSE mix.exs mix.lock priv Procfile README.md test config"
+  mv ${direc_file} $build_pack_path
+  cp -rf lib $build_pack_path
+  cd $build_pack_path
   output_section "Fetching app dependencies with mix"
   mix deps.get --only $MIX_ENV || exit 1
-
   export GIT_DIR=$git_dir_value
+
+  mv ${direc_file} $build_path
+  cd $build_path
   cd - > /dev/null
 }
 
@@ -97,12 +102,16 @@ function compile_app() {
   unset GIT_DIR
 
   cd $build_path
+  mv ${direc_file} $build_pack_path
+  cd $build_pack_path
   output_section "Compiling"
   mix compile --force || exit 1
 
   mix deps.clean --unused
 
   export GIT_DIR=$git_dir_value
+  mv ${direc_file} $build_path
+  cd $build_path
   cd - > /dev/null
 }
 
