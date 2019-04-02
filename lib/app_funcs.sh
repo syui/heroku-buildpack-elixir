@@ -75,9 +75,10 @@ function app_dependencies() {
   unset GIT_DIR
   cd $build_path
   rm -rf deps
+  cd $build_pack_path
+  rm -rf deps
   mv .git $cache_path
   cp -pR $build_path/. $build_pack_path
-  cd $build_pack_path
   output_section "Fetching app dependencies with mix"
   mix deps.get --only $MIX_ENV || exit 1
   export GIT_DIR=$git_dir_value
@@ -101,9 +102,8 @@ function compile_app() {
   local git_dir_value=$GIT_DIR
   unset GIT_DIR
 
-  cd $build_path
-  cp -pR $build_path/. $build_pack_path
   cd $build_pack_path
+  cp -pR $build_path/. $build_pack_path
   output_section "Compiling"
   mix compile --force || exit 1
 
@@ -112,7 +112,7 @@ function compile_app() {
   export GIT_DIR=$git_dir_value
   cp -pR $build_pack_path/. $build_path
   cd $build_path
-  mv $cache_path/.git .
+  mv $cache_path/.git $build_pack_path
   cd - > /dev/null
 }
 
