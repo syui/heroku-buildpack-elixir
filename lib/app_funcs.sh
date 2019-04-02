@@ -77,7 +77,6 @@ function app_dependencies() {
   rm -rf deps
   cd $build_pack_path
   rm -rf deps
-  mv .git $cache_path
   cp -pR $build_path/. $build_pack_path
   output_section "Fetching app dependencies with mix"
   mix deps.get --only $MIX_ENV || exit 1
@@ -112,7 +111,6 @@ function compile_app() {
   export GIT_DIR=$git_dir_value
   cp -pR $build_pack_path/. $build_path
   cd $build_path
-  mv $cache_path/.git $build_pack_path
   cd - > /dev/null
 }
 
